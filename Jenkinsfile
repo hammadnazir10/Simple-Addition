@@ -1,4 +1,4 @@
-pipeline {
+\pipeline {
     agent any
     stages {
         stage('Checkout') {
@@ -10,7 +10,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
+                    // Build Docker image using the Dockerfile
                     docker.build('simple-addition-app')
                 }
             }
@@ -19,19 +19,19 @@ pipeline {
             steps {
                 script {
                     // Define server details
-                    def server = 'https://157.173.119.196'
+                    def server = '157.173.119.196'
                     def user = 'root'
-                    def password = 'dEivnquVA2tl2K1F'
+                    def password = credentials('contabo-server-password') // Use credentials ID
 
-                    // SSH into Contabo and deploy
+                    // SSH into Contabo and deploy Docker image
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'contabo-server',
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: '**/Dockerfile', // Change this if you need to transfer more files
-                                        remoteDirectory: '/path/to/deploy', // Adjust this path as needed
+                                        sourceFiles: '**/Dockerfile', // Change this if needed
+                                        remoteDirectory: '/path/to/deploy', // Adjust this path
                                         removePrefix: '',
                                         excludes: '',
                                         flatten: false
