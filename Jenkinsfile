@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Define server details
-                    def server = '157.173.119.196'
+                    def server = 'https://157.173.119.196'
                     def user = 'root'
                     def password = 'dEivnquVA2tl2K1F'
 
