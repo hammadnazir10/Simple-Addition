@@ -1,16 +1,14 @@
-\pipeline {
+pipeline {
     agent any
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from GitHub
                 git branch: 'main', url: 'https://github.com/hammadnazir10/Simple-Addition.git'
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image using the Dockerfile
                     docker.build('simple-addition-app')
                 }
             }
@@ -18,20 +16,14 @@
         stage('Deploy to Contabo') {
             steps {
                 script {
-                    // Define server details
-                    def server = '157.173.119.196'
-                    def user = 'root'
-                    def password = credentials('contabo-server-password') // Use credentials ID
-
-                    // SSH into Contabo and deploy Docker image
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'contabo-server',
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: '**/Dockerfile', // Change this if needed
-                                        remoteDirectory: '/path/to/deploy', // Adjust this path
+                                        sourceFiles: '**/Dockerfile',
+                                        remoteDirectory: '/var/jenkins_home/deploy',
                                         removePrefix: '',
                                         excludes: '',
                                         flatten: false
@@ -42,6 +34,16 @@
                                 verbose: true
                             )
                         ]
+                    )
+                    
+                    // Additional stage to run commands on the server
+                    sshCommand(
+                        command: '''
+                            cd /var/jenkins_home/deploy
+                            docker build -t simple-addition-app .
+                            docker run -d -p 8501:8501 simple-addition-app
+                        ''',
+                        remote: [name: 'contabo-server']
                     )
                 }
             }
