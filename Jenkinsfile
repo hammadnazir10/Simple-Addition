@@ -18,7 +18,7 @@ pipeline {
         stage('Deploy to Contabo') {
             steps {
                 script {
-                    // Define your server details
+                    // Define server details
                     def server = '157.173.119.196'
                     def user = 'root'
                     def password = 'dEivnquVA2tl2K1F'
