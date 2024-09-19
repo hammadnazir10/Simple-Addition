@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Streamlit app title
-st.title("Simple Addition App")
+st.title("Simple Addition App by Talha")
 #hello
 # Input fields for two numbers
 number1 = st.number_input("Enter the first number:", value=0)
